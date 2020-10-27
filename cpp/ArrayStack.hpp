@@ -1,3 +1,7 @@
+/*
+ * ArrayStack.hpp
+ */
+
 #ifndef ARRAYSTACK_HPP_
 #define ARRAYSTACK_HPP_
 #include <stdexcept> // for exceptions
@@ -75,7 +79,7 @@ T ArrayStack<T>::pop() {
 template<typename T>
 T ArrayStack<T>::peek() {
 	if (isEmpty()) {
-		throw std::logic_error("Stack underflow: cannot remove from empty stack.");
+		throw std::logic_error("Stack underflow: cannot peek empty stack.");
 	}
 	else {
 		return arr[n - 1];
