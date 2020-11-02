@@ -7,7 +7,7 @@ class SinglyLinkedList {
 public:
     SinglyLinkedList() {
         head = tail = nullptr;
-        n = 0;
+        size = 0;
     }
 
     ~SinglyLinkedList() {
@@ -28,7 +28,7 @@ public:
             newNode->next = head;
             head = newNode;
         }
-        n += 1;
+        size += 1;
     }
 
     // Add an element to the linked list's tail.
@@ -41,7 +41,7 @@ public:
             tail->next = newNode;
             tail = tail->next;
         }
-        n += 1;
+        size += 1;
     }
 
     // Remove the first value at the linked list's head.
@@ -52,9 +52,9 @@ public:
 
         T data = head->data;
         Node* nodeToDelete = head;
-        n -= 1;
+        size -= 1;
         head = head->next;
-        if (isEmpty()) tail = nullptr;
+        if (head == nullptr) tail = nullptr;
         delete nodeToDelete;
         return data;
     }
@@ -81,20 +81,18 @@ public:
             secondToLast->next = nullptr;
             tail = secondToLast;
         }
-        n -= 1;
+        size -= 1;
         return data;
     }
 
     // Remove element at given index.
     T removeAt(int index) {
-        if (index < 0 || index >= size()) {
-            throw std::logic_error("Index out of range.");
-        }
+        if (index < 0 || index >= size) throw std::logic_error("Index out of range.");
 
         // If the node is at either at the head or the tail,
         // handle it independently
-        if (index == 0)          return removeFirst();
-        if (index == size() - 1) return removeLast();
+        if (index == 0)        return removeFirst();
+        if (index == size - 1) return removeLast();
 
         // node is between the head and the tail (exclusive)
         Node* pred = nullptr;
@@ -106,24 +104,20 @@ public:
 
         T data = curr->data;
         pred->next = curr->next;
-        n -= 1;
+        size -= 1;
         delete curr;
         return data;
     }
 
     // Return the element at the linked list's head.
     T peekFirst() const {
-        if (isEmpty()) {
-            throw std::logic_error("Cannot peek into empty list.");
-        }
+        if (isEmpty()) throw std::logic_error("Cannot peek into empty list.");
         return head->data;   
     }
 
     // Return the element at the linked list's tail.
     T peekLast() const {
-        if (isEmpty()) {
-            throw std::logic_error("Cannot peek into empty list.");
-        }
+        if (isEmpty()) throw std::logic_error("Cannot peek into empty list.");
         return tail->data;   
     }
 
@@ -143,13 +137,21 @@ public:
     }
 
     // Return the size of the linked list (i.e., number of elements in it).
-    int size() const {
-        return n;
+    int elems() const {
+        return size;
     }
 
     // Return true if linked list is empty. Otherwise, false.
     bool isEmpty() const {
         return head == nullptr;
+    }
+
+    friend std::ostream& operator<<(std::ostream& out, const SinglyLinkedList& list) {
+        for (Node* curr = list.head; curr != nullptr; curr = curr->next) {
+            if (curr->next) out << curr->data << " -> ";
+            else out << curr->data << "\n";
+        }
+        return out;
     }
 
 private:
@@ -161,7 +163,7 @@ private:
 
     Node* head;
     Node* tail;
-    int n;
+    int size;
 };
 
 #endif
