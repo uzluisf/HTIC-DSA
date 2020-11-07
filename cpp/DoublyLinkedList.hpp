@@ -57,19 +57,15 @@ public:
         return data;
     }
     
+    T getAt(int index) {
+        if (index < 0 || index >= size) throw std::logic_error("Index out of range.");
+        return _getNode(index)->data;
+    }
+
     T removeAt(int index) {
         if (index < 0 || index >= size) throw std::logic_error("Index out of range.");
-
-        Node* curr = head;
-        if (index < size/2) {
-            for (int i = 0; i != index; i++)
-                curr = curr->next;
-        }
-        else {
-            for (int i = size-1; i != index; i--)
-                curr = curr->prev;
-        }
-       return _remove(curr);
+        Node* node = _getNode(index);
+        return _remove(node);
     }
 
     T peekFirst() const {
@@ -89,8 +85,8 @@ public:
         return -1;
     }
 
-    inline bool contains(T val) const { return indexOf(val) != -1; }
-    inline int elems() const { return size; }
+    bool contains(T val) const { return indexOf(val) != -1; }
+    int elems() const { return size; }
     bool isEmpty() const { return size == 0; }
     
     friend std::ostream& operator<<(std::ostream& out, const DoublyLinkedList& list) {
@@ -112,6 +108,23 @@ private:
     Node* head;
     Node* tail;
     int size;
+
+    Node* _getNode(int index) {
+        Node* curr = nullptr;
+        if (index < size/2) {
+            curr = head;
+            for (int i = 0; i != index; i++) {
+                curr = curr->next;
+            }
+        }
+        else {
+            curr  = tail;
+            for (int i = size-1; i != index; i--) {
+                curr = curr->prev;
+            }
+        }
+        return curr;
+    }
 
     T _remove(Node*& curr) {
         if (curr->prev == nullptr) return removeFirst();
